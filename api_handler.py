@@ -66,106 +66,51 @@ class ApiHandler:
             e.message: str = f'E-VW-OWFS-8 API request with parameter <{param}> timed out.'
 
         if response and response.status_code == 200:
-            if self.api_method == 'weather':
-                self.__emit_current_weather(json_response_object)
-            elif self.api_method == 'forecast':
-                self.__emit_forecast(json_response_object)
+            if self.api_method == 'user':
+                self.__emit_user(json_response_object)
         else:
             self.logger.error('')
 
     def __api_request(self, param: str) -> requests.Response:
-        request: str = f"{self.api_host}{self.api_method}?{param}&units=metric&appid={self.api_key}"
+        #request: str = f"{self.api_host}{self.api_method}?{param}&units=metric&appid={self.api_key}"
+        request: str = f"https://randomuser.me/api/"
         self.logger.info(f'REQUEST STRING: {request}\n\n\n')
         return requests.get(request)
 
-    def __emit_current_weather(self, json_dict: dict) -> None:
-        coord_group = json_dict.get('coord') if json_dict.get('coord') else {}
-        main_group = json_dict.get('main') if json_dict.get('main') else {}
-        weather_group = json_dict.get('weather') if json_dict.get('weather') else {}
-        wind_group = json_dict.get('wind') if json_dict.get('wind') else {}
-        clouds_group = json_dict.get('clouds') if json_dict.get('clouds') else {}
-        rain_group = json_dict.get('rain') if json_dict.get('rain') else {}
-        snow_group = json_dict.get('snow') if json_dict.get('snow') else {}
-        sys_group = json_dict.get('sys') if json_dict.get('sys') else {}
+    def __emit_user(self, json_dict: dict) -> None:
+        results_group = json_dict.get('results') if json_dict.get('results') else {}
 
-        self.ctx.emit(sys_group.get('country'),  # --country code
-                      json_dict.get('name'),  # --city name
-                      json_dict.get('id'),  # --location id
-                      datetime.datetime.fromtimestamp(int(json_dict.get('dt').__str__())),
-                      # --time of data collection in UNIX format -> converted to DB compatible datetime-string
-                      coord_group.get('lon'),  # --longitude
-                      coord_group.get('lat'),  # --latitude
-                      weather_group[0].get('id'),  # --weather id
-                      weather_group[0].get('main'),  # --weather group
-                      weather_group[0].get('description'),  # --weather condition in the group
-                      weather_group[0].get('icon'),  # --weather icon id
-                      main_group.get('temp'),  # --temperature in degrees centigrade
-                      main_group.get('feels_like'),  # --felt temperature in degrees centigrade
-                      main_group.get('temp_min'),  # --min temperature in degrees centigrade
-                      main_group.get('temp_max'),  # --max temperature in degrees centigradelsius
-                      main_group.get('pressure'),  # --atmospheric pressure in hPa
-                      main_group.get('humidity'),  # --relative humidity in %
-                      main_group.get('sea_level'),  # --atmospheric pressure on the sea level
-                      main_group.get('grnd_level'),  # --atmospheric pressure on the ground level
-                      wind_group.get('speed'),  # --wind speed m/s
-                      wind_group.get('deg'),  # --wind direction
-                      wind_group.get('gust'),  # --wind gust
-                      clouds_group.get('all'),  # --cloudiness in %
-                      rain_group.get('1h'),  # --rain volume in the last hour in mm
-                      rain_group.get('3h'),  # --rain volume in the last 3 hours in mm
-                      snow_group.get('1h'),  # --snow volume in the last hour in mm
-                      snow_group.get('3h'),  # --snow volume in the last 3 hours in mm
-                      json_dict.get('visibility'),  # --visibility in meters
-                      datetime.datetime.fromtimestamp(int(sys_group.get('sunrise').__str__())),
-                      # --sunrise time in UNIX format conversion like data collection time
-                      datetime.datetime.fromtimestamp(int(sys_group.get('sunset').__str__())),
-                      # --sunrise time in UNIX format conversion like data collection time
-                      json_dict.get('timezone') / 3600,  # --shift in seconds from UTC -> converted to hours shift
+        self.ctx.emit(results_group[0].get('gender'),
+                    results_group[0].get('name').get('title'),
+                    results_group[0].get('name').get('first'),
+                    results_group[0].get('name').get('last'),
+                    results_group[0].get('location').get('street').get('number'),
+                    results_group[0].get('location').get('street').get('name'),
+                    results_group[0].get('location').get('city'),
+                    results_group[0].get('location').get('state'),
+                    results_group[0].get('location').get('country'),
+                    results_group[0].get('location').get('postcode'),
+                    results_group[0].get('location').get('coordinates').get('latitude'),
+                    results_group[0].get('location').get('coordinates').get('longitude'),
+                    results_group[0].get('location').get('timezone').get('offset'),
+                    results_group[0].get('location').get('timezone').get('description'),
+                    results_group[0].get('email'),
+                    results_group[0].get('login').get('uuid'),
+                    results_group[0].get('login').get('username'),
+                    results_group[0].get('login').get('password'),
+                    results_group[0].get('login').get('salt'),
+                    results_group[0].get('login').get('md5'),
+                    results_group[0].get('login').get('sha1'),
+                    results_group[0].get('login').get('sha256'),
+                    results_group[0].get('dob').get('date'),
+                    results_group[0].get('dob').get('age'),
+                    results_group[0].get('registred').get('date'),
+                    results_group[0].get('registred').get('age'),
+                    results_group[0].get('phone'),
+                    results_group[0].get('cell'),
+                    results_group[0].get('id').get('name'),
+                    results_group[0].get('id').get('value'),
+                    results_group[0].get('nat'),
                       None)
 
-    def __emit_forecast(self, json_dict: dict) -> None:
-        list_group = json_dict.get('list') if json_dict.get('list') else {}
-        city_group = json_dict.get('city') if json_dict.get('city') else {}
-        coord_group = city_group.get('coord') if city_group else {}
-
-        for record in list_group:
-            main_group = record.get('main') if record.get('main') else {}
-            weather_group = record.get('weather') if record.get('weather') else {}
-            wind_group = record.get('wind') if record.get('wind') else {}
-            clouds_group = record.get('clouds') if record.get('clouds') else {}
-            rain_group = record.get('rain') if record.get('rain') else {}
-            snow_group = record.get('snow') if record.get('snow') else {}
-            sys_group = record.get('sys') if record.get('sys') else {}
-
-            self.ctx.emit(city_group.get('country'),  # --country code
-                          city_group.get('name'),  # --city name
-                          city_group.get('id'),  # --location id
-                          datetime.datetime.strptime(record.get('dt_txt'), '%Y-%m-%d %H:%M:%S'),  # --forecast timestamp
-                          coord_group.get('lon'),  # --longitude
-                          coord_group.get('lat'),  # --latitude
-                          weather_group[0].get('id'),  # --weather id
-                          weather_group[0].get('main'),  # --weather group
-                          weather_group[0].get('description'),  # --weather condition in the group
-                          weather_group[0].get('icon'),  # --weather icon id
-                          main_group.get('temp'),  # --temperature in degrees centigrade
-                          main_group.get('feels_like'),  # --felt temperature in degrees centigrade
-                          main_group.get('temp_min'),  # --min temperature in degrees centigrade
-                          main_group.get('temp_max'),  # --max temperature in degrees centigradelsius
-                          main_group.get('pressure'),  # --atmospheric pressure in hPa
-                          main_group.get('humidity'),  # --relative humidity in %
-                          main_group.get('sea_level'),  # --atmospheric pressure on the sea level
-                          main_group.get('grnd_level'),  # --atmospheric pressure on the ground level
-                          wind_group.get('speed'),  # --wind speed m/s
-                          wind_group.get('deg'),  # --wind direction
-                          record.get('pop'),  # --Probability of precipitation
-                          clouds_group.get('all'),  # --cloudiness in %
-                          rain_group.get('3h'),  # --rain volume in the last 3 hours in mm
-                          snow_group.get('3h'),  # --snow volume in the last 3 hours in mm
-                          record.get('visibility'),  # --visibility in meters
-                          datetime.datetime.fromtimestamp(int(city_group.get('sunrise').__str__())),
-                          # --sunrise time in UNIX format conversion like data collection time
-                          datetime.datetime.fromtimestamp(int(city_group.get('sunset').__str__())),
-                          # --sunrise time in UNIX format conversion like data collection time
-                          city_group.get('timezone') / 3600,  # --shift in seconds from UTC -> converted to hours shift
-                          None)
 
