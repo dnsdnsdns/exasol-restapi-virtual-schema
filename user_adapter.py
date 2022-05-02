@@ -96,11 +96,11 @@ class AdapterCallHandler:
                         {"name": "LOGIN_SHA256",
                           "dataType": {"type": "VARCHAR", "size": 200}},                          
                         {"name": "DOB_DATE",
-                         "dataType": {"type": "DATE"}},
+                         "dataType": {"type": "VARCHAR", "size": 100}},
                         {"name": "DOB_AGE",
                          "dataType": {"type": "DECIMAL", "precision": 9, "scale": 0}},
                         {"name": "REGISTERED_DATE",
-                         "dataType": {"type": "DATE"}},
+                         "dataType": {"type": "VARCHAR", "size": 100}},
                         {"name": "REGISTERED_AGE",
                          "dataType": {"type": "DECIMAL", "precision": 9, "scale": 0}},
                         {"name": "PHONE",
@@ -231,9 +231,9 @@ class AdapterCallHandler:
                                                                 login_md5 VARCHAR(200), \
                                                                 login_sha1 VARCHAR(200), \
                                                                 login_sha256 VARCHAR(200), \
-                                                                dob_date DATE, \
+                                                                dob_date VARCHAR(100), \
                                                                 dob_age DECIMAL(9,0), \
-                                                                registered_date DATE, \
+                                                                registered_date VARCHAR(100), \
                                                                 registered_age DECIMAL(9,0), \
                                                                 phone VARCHAR(200), \
                                                                 cell VARCHAR(200), \
