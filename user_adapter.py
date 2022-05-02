@@ -70,7 +70,7 @@ class AdapterCallHandler:
                         {"name": "LOCATION_COUNTRY",
                          "dataType": {"type": "VARCHAR", "size": 50}},
                         {"name": "LOCATION_POSTCODE",
-                         "dataType": {"type": "DECIMAL", "precision": 9, "scale": 0}},
+                         "dataType": {"type": "VARCHAR", "size": 100}},
                         {"name": "LOCATION_COORDINATES_LATITUDE",
                          "dataType": {"type": "VARCHAR", "size": 100}},
                         {"name": "LOCATION_COORDINATES_LONGITUDE",
@@ -214,7 +214,7 @@ class AdapterCallHandler:
                                                                 location_city VARCHAR(100), \
                                                                 location_state VARCHAR(100), \
                                                                 location_country VARCHAR(50), \
-                                                                location_postcode DECIMAL(9,0), \
+                                                                location_postcode VARCHAR(100), \
                                                                 location_coordinates_latitude VARCHAR(100), \
                                                                 location_coordinates_longitude VARCHAR(100), \
                                                                 timezone_offset VARCHAR(20), \

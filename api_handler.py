@@ -65,6 +65,10 @@ class ApiHandler:
     def __emit_user(self, json_dict: dict) -> None:
         results_group = json_dict.get('results') if json_dict.get('results') else {}
 
+        postcode = results_group[0].get('location').get('postcode')
+        if type(postcode) == int:
+            postcode = self.__cast_postcode(postcode)
+
         self.ctx.emit(results_group[0].get('gender'),
                     results_group[0].get('name').get('title'),
                     results_group[0].get('name').get('first'),
@@ -74,7 +78,7 @@ class ApiHandler:
                     results_group[0].get('location').get('city'),
                     results_group[0].get('location').get('state'),
                     results_group[0].get('location').get('country'),
-                    results_group[0].get('location').get('postcode'),
+                    postcode,
                     results_group[0].get('location').get('coordinates').get('latitude'),
                     results_group[0].get('location').get('coordinates').get('longitude'),
                     results_group[0].get('location').get('timezone').get('offset'),
@@ -96,5 +100,8 @@ class ApiHandler:
                     results_group[0].get('id').get('name'),
                     results_group[0].get('id').get('value'),
                     results_group[0].get('nat'))
+
+    def __cast_postcode(self, postcode: int) -> str:
+        return str(postcode)
 
 
