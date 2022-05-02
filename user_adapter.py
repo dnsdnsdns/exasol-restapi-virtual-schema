@@ -72,9 +72,9 @@ class AdapterCallHandler:
                         {"name": "LOCATION_POSTCODE",
                          "dataType": {"type": "DECIMAL", "precision": 9, "scale": 0}},
                         {"name": "LOCATION_COORDINATES_LATITUDE",
-                         "dataType": {"type": "DECIMAL", "precision": 18, "scale": 4}},
+                         "dataType": {"type": "VARCHAR", "size": 100}},
                         {"name": "LOCATION_COORDINATES_LONGITUDE",
-                         "dataType": {"type": "DECIMAL", "precision": 18, "scale": 4}},
+                         "dataType": {"type": "VARCHAR", "size": 100}},
                         {"name": "TIMEZONE_OFFSET",
                          "dataType": {"type": "VARCHAR", "size": 20}},
                         {"name": "TIMEZONE_DESCRIPTION",
@@ -219,8 +219,8 @@ class AdapterCallHandler:
                                                                 location_state VARCHAR(100), \
                                                                 location_country VARCHAR(50), \
                                                                 location_postcode DECIMAL(9,0), \
-                                                                location_coordinates_latitude DECIMAL(18,4), \
-                                                                location_coordinates_longitude DECIMAL(18,4), \
+                                                                location_coordinates_latitude VARCHAR(100), \
+                                                                location_coordinates_longitude VARCHAR(100), \
                                                                 timezone_offset VARCHAR(20), \
                                                                 timezone_description VARCHAR(200), \
                                                                 email VARCHAR(200), \
