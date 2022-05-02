@@ -33,28 +33,14 @@ class ApiHandler:
             # -- Handle Null values sent from the adapter
             if (type(expression) == list and any(not element for element in expression)) or not expression:
                 continue
-            elif type(expression) == list and (all(element.startswith('id') for element in expression) or all(
-                    element.startswith('q') for element in expression)):
+            elif type(expression) == list and (all(element.startswith('gender') for element in expression)):
                 self.__unpack_const_list_expression(expression)
-            elif type(expression) == list and any(element.startswith('zip') for element in expression):
-                self.__handle_zip_code_expression(expression)
-            elif type(expression) == list:
-                self.__handle_geo_lookup_expression(expression)
             else:
                 self.__request_api_and_emit(expression)
 
     def __unpack_const_list_expression(self, expression: list) -> None:
         for literal in expression:
             self.__request_api_and_emit(literal)
-
-    def __handle_zip_code_expression(self, expression: list) -> None:
-        reg = re.compile('zip')
-        zip_index: int = expression.index(list(filter(reg.match, expression))[0])  # --Reverse ZIP, Country Code if reversed
-        self.__request_api_and_emit(f'{expression[zip_index]}{expression[abs(zip_index - 1)]}')
-
-    def __handle_geo_lookup_expression(self, expression: str) -> None:
-        parameter: str = '&'.join(expression)
-        self.__request_api_and_emit(parameter)
 
     def __request_api_and_emit(self, param: str) -> None:
         self.logger.info(f'REQUESTNG API WITH: {param}')
@@ -73,7 +59,8 @@ class ApiHandler:
 
     def __api_request(self, param: str) -> requests.Response:
         #request: str = f"{self.api_host}{self.api_method}?{param}&units=metric&appid={self.api_key}"
-        request: str = f"https://randomuser.me/api/"
+        #request: str = f"https://randomuser.me/api/"
+        request: str = f"{self.api_host}?{param}"
         self.logger.info(f'REQUEST STRING: {request}\n\n\n')
         return requests.get(request)
 

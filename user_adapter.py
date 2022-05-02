@@ -131,141 +131,80 @@ class AdapterCallHandler:
 
     def __build_sql(self):
         api_method: str = self.__parse_api_method_from_name(self.request_json_object['pushdownRequest']['from']['name'])
-        #filters = self.parse_filters(self.request_json_object['pushdownRequest']['filter'])
+        filters = self.parse_filters(self.request_json_object['pushdownRequest']['filter'])
 
         log_ip: str = self.logger.handlers[0].host
         log_port: int = self.logger.handlers[0].port
         log_level: int = self.logger.level
 
-        #self.logger.info(f'\n\n\nAPI FILTERS {filters}')
-        #if api_method == 'user':
-        #    return self.__generate_user_sql(api_method, json.dumps(filters), log_ip, log_port, log_level)
+        self.logger.info(f'\n\n\nAPI FILTERS {filters}')
+        if api_method == 'user':
+            return self.__generate_user_sql(api_method, json.dumps(filters), log_ip, log_port, log_level)
 
         # without filter
-        if api_method == 'user':
-            return self.__generate_user_sql(api_method, log_ip, log_port, log_level)
+        # if api_method == 'user':
+        #     return self.__generate_user_sql(api_method, log_ip, log_port, log_level)
 
     def __parse_api_method_from_name(self, name) -> str:
         if name == 'USER':
             return 'user'
 
-    # def parse_filters(self, filters):
-    #     buffer = []
+    def parse_filters(self, filters):
+        buffer = []
 
-    #     self.logger.info('>>>>>FILTER<<<<<')
-    #     self.logger.info(f'{filters}')
+        self.logger.info('>>>>>FILTER<<<<<')
+        self.logger.info(f'{filters}')
 
-    #     # -- If true filter is 'IN_CONSTLIST'
-    #     if filters.get('arguments'):
-    #         for argument in filters.get('arguments'):
-    #             e: dict = {'left': {'name': filters.get('expression').get('name')},
-    #                        'right': {'value': argument.get('value')}, 'type': 'predicate_equal'}
-    #             buffer.append(self.parse_filters(e))
-    #     # -- Is filters a single filter or a list of filters?
-    #     elif filters.get('expressions'):
-    #         for f in filters.get('expressions'):
-    #             buffer.append(self.parse_filters(f))
-    #     # -- Leaf element has to be of type 'predicate_equal' because this is the only predicate on leaf level that is supported
-    #     else:
-    #         try:
-    #             return self.__handle_predicate_equal(filters)
-    #         except (ValueError, KeyError) as err:
-    #             self.logger.warning(err.message)
-    #             return None
-    #     return buffer
+        # -- If true filter is 'IN_CONSTLIST'
+        if filters.get('arguments'):
+            for argument in filters.get('arguments'):
+                e: dict = {'left': {'name': filters.get('expression').get('name')},
+                           'right': {'value': argument.get('value')}, 'type': 'predicate_equal'}
+                buffer.append(self.parse_filters(e))
+        # -- Is filters a single filter or a list of filters?
+        elif filters.get('expressions'):
+            for f in filters.get('expressions'):
+                buffer.append(self.parse_filters(f))
+        # -- Leaf element has to be of type 'predicate_equal' because this is the only predicate on leaf level that is supported
+        else:
+            try:
+                return self.__handle_predicate_equal(filters)
+            except (ValueError, KeyError) as err:
+                self.logger.warning(err.message)
+                return None
+        return buffer
 
-    # def __handle_predicate_equal(self, filter_json) -> str:
-    #     """Check if expressions are reversed"""
+    def __handle_predicate_equal(self, filter_json) -> str:
+        """Check if expressions are reversed"""
 
-    #     if filter_json.get('right').get('value'):
-    #         filter_value: str = filter_json['right']['value']
-    #         filter_name: str = filter_json['left']['name']
-    #     else:
-    #         filter_value: str = filter_json['left']['value']
-    #         filter_name: str = filter_json['right']['name']
+        if filter_json.get('right').get('value'):
+            filter_value: str = filter_json['right']['value']
+            filter_name: str = filter_json['left']['name']
+        else:
+            filter_value: str = filter_json['left']['value']
+            filter_name: str = filter_json['right']['name']
 
-    #     self.logger.info(f'Filter name: {filter_name} || Filter value: {filter_value}')
+        self.logger.info(f'Filter name: {filter_name} || Filter value: {filter_value}')
 
-    #     api_parameter_key_mapping: dict = {'CITY_NAME': 'q=',
-    #                                        'LONGITUDE': 'lon=',
-    #                                        'LATITUDE': 'lat=',
-    #                                        'CITY_ID': 'id=',
-    #                                        'ZIP': 'zip=',
-    #                                        'COUNTRY_CODE': ','
-    #                                        }
+        api_parameter_key_mapping: dict = {'GENDER': 'gender='}
 
-    #     if filter_name in ('CITY_NAME', 'COUNTRY_CODE'):
-    #         try:
-    #             float(filter_value)
-    #             raise TypeError()
-    #         except ValueError:
-    #             return f"{api_parameter_key_mapping[filter_name]}{filter_value}"
-    #         except TypeError as e:
-    #             e.message = f'E-VS-OWFS-2 {filter_name} column filter does not accept numbers. Found <{filter_value}>.'
-    #             raise
-    #     elif filter_name in ('LONGITUDE', 'LATITUDE'):
-    #         try:
-    #             float(filter_value)
-    #             return f"{api_parameter_key_mapping[filter_name]}{filter_value}"
-    #         except ValueError as e:
-    #             e.message = f'E-VS-OWFS-3 {filter_name} column filter only accepts numbers. Found <{filter_value}>.'
-    #             raise
-    #     elif filter_name in ('CITY_ID', 'ZIP'):
-    #         try:
-    #             int(filter_value)
-    #             return f"{api_parameter_key_mapping[filter_name]}{filter_value}"
-    #         except ValueError as e:
-    #             e.message = f'E-VS-OWFS-5 {filter_name} column filter only accepts whole numbers. Found <{filter_value}>.'
-    #             raise
-    #     else:
-    #         raise KeyError(
-    #             f'E-VS-OWFS-1 Filtering not supported on column {filter_name} in PREDICATE_EQUAL expression.')
+        if filter_name in ('GENDER'):
+            try:
+                float(filter_value)
+                raise TypeError()
+            except ValueError:
+                return f"{api_parameter_key_mapping[filter_name]}{filter_value}"
+            except TypeError as e:
+                e.message = f'E-VS-OWFS-2 {filter_name} column filter does not accept numbers. Found <{filter_value}>.'
+                raise
+        else:
+            raise KeyError(
+                f'E-VS-OWFS-1 Filtering not supported on column {filter_name} in PREDICATE_EQUAL expression.')
 
-    # def __generate_user_sql(self, api_method, filters, log_ip, log_port, log_level) -> str:
-    #     sql: str = f'SELECT restapi_vs_scripts.api_handler(\'{self.API_URL}\', \
-    #                                                     \'{api_method}\', \
-    #                                                     \'{filters}\', \
-    #                                                     \'{self.api_key}\', \
-    #                                                     \'{log_ip}\', \
-    #                                                     \'{log_port}\', \
-    #                                                     \'{log_level}\') \
-    #                                                     EMITS (country_code VARCHAR(200), \
-    #                                                             city_name VARCHAR(200), \
-    #                                                             city_id INT, \
-    #                                                             data_collection_time TIMESTAMP, \
-    #                                                             longitude DOUBLE, \
-    #                                                             latitude DOUBLE, \
-    #                                                             weather_id INT, \
-    #                                                             weather_group VARCHAR(200), \
-    #                                                             weather_description VARCHAR(2000), \
-    #                                                             weather_icon_id VARCHAR(20), \
-    #                                                             temperature DOUBLE, \
-    #                                                             felt_temperature DOUBLE, \
-    #                                                             min_temperature DOUBLE, \
-    #                                                             max_temperature DOUBLE, \
-    #                                                             atmospheric_pressure DOUBLE, \
-    #                                                             relative_humidity INT, \
-    #                                                             atmospheric_pressure_sea_level DOUBLE, \
-    #                                                             atmospheric_pressure_ground_level DOUBLE, \
-    #                                                             wind_speed DOUBLE, \
-    #                                                             wind_direction INT, \
-    #                                                             wind_gust DOUBLE, \
-    #                                                             cloudiness INT, \
-    #                                                             rain_1h DOUBLE, \
-    #                                                             rain_3h DOUBLE, \
-    #                                                             snow_1h DOUBLE, \
-    #                                                             snow_3h DOUBLE, \
-    #                                                             visibility INT, \
-    #                                                             sunrise TIMESTAMP, \
-    #                                                             sunset TIMESTAMP, \
-    #                                                             timezone_shift INT, \
-    #                                                             zip VARCHAR(200))'
-    #     return sql
-
-    #without filters
-    def __generate_user_sql(self, api_method, log_ip, log_port, log_level) -> str:
+    def __generate_user_sql(self, api_method, filters, log_ip, log_port, log_level) -> str:
         sql: str = f'SELECT restapi_vs_scripts.api_handler(\'{self.API_URL}\', \
                                                         \'{api_method}\', \
+                                                        \'{filters}\', \
                                                         \'{self.api_key}\', \
                                                         \'{log_ip}\', \
                                                         \'{log_port}\', \
@@ -302,3 +241,44 @@ class AdapterCallHandler:
                                                                 id_value VARCHAR(200), \
                                                                 nat VARCHAR(20))'
         return sql
+
+    #without filters
+    # def __generate_user_sql(self, api_method, log_ip, log_port, log_level) -> str:
+    #     sql: str = f'SELECT restapi_vs_scripts.api_handler(\'{self.API_URL}\', \
+    #                                                     \'{api_method}\', \
+    #                                                     \'{self.api_key}\', \
+    #                                                     \'{log_ip}\', \
+    #                                                     \'{log_port}\', \
+    #                                                     \'{log_level}\') \
+    #                                                     EMITS (gender VARCHAR(20), \
+    #                                                             name_title VARCHAR(20), \
+    #                                                             name_first VARCHAR(20), \
+    #                                                             name_last VARCHAR(20), \
+    #                                                             location_street_number DECIMAL(9,0), \
+    #                                                             location_street_name VARCHAR(200), \
+    #                                                             location_city VARCHAR(100), \
+    #                                                             location_state VARCHAR(100), \
+    #                                                             location_country VARCHAR(50), \
+    #                                                             location_postcode DECIMAL(9,0), \
+    #                                                             location_coordinates_latitude DECIMAL(18,4), \
+    #                                                             location_coordinates_longitude DECIMAL(18,4), \
+    #                                                             timezone_offset VARCHAR(20), \
+    #                                                             timezone_description VARCHAR(200), \
+    #                                                             email VARCHAR(200), \
+    #                                                             login_uuid VARCHAR(200), \
+    #                                                             login_username VARCHAR(200), \
+    #                                                             login_password VARCHAR(200), \
+    #                                                             login_salt VARCHAR(200), \
+    #                                                             login_md5 VARCHAR(200), \
+    #                                                             login_sha1 VARCHAR(200), \
+    #                                                             login_sha256 VARCHAR(200), \
+    #                                                             dob_date DATE, \
+    #                                                             dob_age DECIMAL(9,0), \
+    #                                                             registred_date DATE, \
+    #                                                             registred_age DECIMAL(9,0), \
+    #                                                             phone VARCHAR(200), \
+    #                                                             cell VARCHAR(200), \
+    #                                                             id_name VARCHAR(200), \
+    #                                                             id_value VARCHAR(200), \
+    #                                                             nat VARCHAR(20))'
+    #     return sql
