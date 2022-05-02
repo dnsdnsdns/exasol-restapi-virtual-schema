@@ -97,7 +97,6 @@ class ApiHandler:
                     results_group[0].get('cell'),
                     results_group[0].get('id').get('name'),
                     results_group[0].get('id').get('value'),
-                    results_group[0].get('nat'),
-                      None)
+                    results_group[0].get('nat'))
 
 
