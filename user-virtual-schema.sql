@@ -85,6 +85,6 @@ WITH API_KEY = '...'
 /
 
 -- Test
-SELECT * FROM user.user_vs WHERE gender = 'female';
+SELECT * FROM user_vs.user_table WHERE gender = 'female';
 
 

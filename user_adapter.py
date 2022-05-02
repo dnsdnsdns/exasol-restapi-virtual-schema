@@ -48,7 +48,7 @@ class AdapterCallHandler:
         return json.dumps(result)
 
     def __get_user_table_json(self) -> dict:
-        return {"name": "USER",
+        return {"name": "USER_TABLE",
                 "columns":
                     [
                         {"name": "GENDER",
@@ -138,7 +138,7 @@ class AdapterCallHandler:
         log_level: int = self.logger.level
 
         self.logger.info(f'\n\n\nAPI FILTERS {filters}')
-        if api_method == 'user':
+        if api_method == 'user_table':
             return self.__generate_user_sql(api_method, json.dumps(filters), log_ip, log_port, log_level)
 
         # without filter
@@ -146,8 +146,8 @@ class AdapterCallHandler:
         #     return self.__generate_user_sql(api_method, log_ip, log_port, log_level)
 
     def __parse_api_method_from_name(self, name) -> str:
-        if name == 'USER':
-            return 'user'
+        if name == 'USER_TABLE':
+            return 'user_table'
 
     def parse_filters(self, filters):
         buffer = []

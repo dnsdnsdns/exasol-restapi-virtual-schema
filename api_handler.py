@@ -52,7 +52,7 @@ class ApiHandler:
             e.message = f'E-VW-OWFS-8 API request with parameter <{param}> timed out.'
 
         if response and response.status_code == 200:
-            if self.api_method == 'user':
+            if self.api_method == 'user_table':
                 self.__emit_user(json_response_object)
         else:
             self.logger.error('')
