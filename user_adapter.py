@@ -218,7 +218,7 @@ class AdapterCallHandler:
                                                                 location_city VARCHAR(100), \
                                                                 location_state VARCHAR(100), \
                                                                 location_country VARCHAR(50), \
-                                                                location_postcode DECIMAL(9,0), \
+                                                                location_postcode VARCHAR(100), \
                                                                 location_coordinates_latitude VARCHAR(100), \
                                                                 location_coordinates_longitude VARCHAR(100), \
                                                                 timezone_offset VARCHAR(20), \
