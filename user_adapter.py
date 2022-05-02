@@ -30,7 +30,7 @@ class AdapterCallHandler:
         elif request_type == "getCapabilities":
             return json.dumps({"type": "getCapabilities",
                                "capabilities": ["FILTER_EXPRESSIONS", "LITERAL_STRING", "LITERAL_DOUBLE",
-                                                "LITERAL_EXACTNUMERIC", "LITERAL_TIMESTAMP", "FN_PRED_OR", "FN_PRED_AND",
+                                                "LITERAL_EXACTNUMERIC", "FN_PRED_OR", "FN_PRED_AND",
                                                 "FN_PRED_EQUAL", "FN_PRED_IN_CONSTLIST"]})
         elif request_type == "pushdown":
             return self.__handle_pushdown()
