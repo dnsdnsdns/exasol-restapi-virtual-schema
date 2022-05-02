@@ -76,15 +76,15 @@ def run(ctx) -> None:
 /
 
 --/
-CREATE VIRTUAL SCHEMA user
+CREATE VIRTUAL SCHEMA user_vs
 USING restapi_vs_scripts.user_adapter
 WITH API_KEY = '...'
      LOG_LISTENER = '0.0.0.0'   --IP Address
      LOG_LISTENER_PORT = '3333'         --Port
-     LOG_LEVEL = 'INFO'                 --INFO or WARNING
+     LOG_LEVEL = 'INFO';                 --INFO or WARNING
 /
 
 -- Test
-SELECT * FROM user.USER;
+SELECT * FROM user.user_vs WHERE gender = 'female';
 
 
