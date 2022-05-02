@@ -141,10 +141,6 @@ class AdapterCallHandler:
         if api_method == 'user_table':
             return self.__generate_user_sql(api_method, json.dumps(filters), log_ip, log_port, log_level)
 
-        # without filter
-        # if api_method == 'user':
-        #     return self.__generate_user_sql(api_method, log_ip, log_port, log_level)
-
     def __parse_api_method_from_name(self, name) -> str:
         if name == 'USER_TABLE':
             return 'user_table'
@@ -241,44 +237,3 @@ class AdapterCallHandler:
                                                                 id_value VARCHAR(200), \
                                                                 nat VARCHAR(20))'
         return sql
-
-    #without filters
-    # def __generate_user_sql(self, api_method, log_ip, log_port, log_level) -> str:
-    #     sql: str = f'SELECT restapi_vs_scripts.api_handler(\'{self.API_URL}\', \
-    #                                                     \'{api_method}\', \
-    #                                                     \'{self.api_key}\', \
-    #                                                     \'{log_ip}\', \
-    #                                                     \'{log_port}\', \
-    #                                                     \'{log_level}\') \
-    #                                                     EMITS (gender VARCHAR(20), \
-    #                                                             name_title VARCHAR(20), \
-    #                                                             name_first VARCHAR(20), \
-    #                                                             name_last VARCHAR(20), \
-    #                                                             location_street_number DECIMAL(9,0), \
-    #                                                             location_street_name VARCHAR(200), \
-    #                                                             location_city VARCHAR(100), \
-    #                                                             location_state VARCHAR(100), \
-    #                                                             location_country VARCHAR(50), \
-    #                                                             location_postcode DECIMAL(9,0), \
-    #                                                             location_coordinates_latitude DECIMAL(18,4), \
-    #                                                             location_coordinates_longitude DECIMAL(18,4), \
-    #                                                             timezone_offset VARCHAR(20), \
-    #                                                             timezone_description VARCHAR(200), \
-    #                                                             email VARCHAR(200), \
-    #                                                             login_uuid VARCHAR(200), \
-    #                                                             login_username VARCHAR(200), \
-    #                                                             login_password VARCHAR(200), \
-    #                                                             login_salt VARCHAR(200), \
-    #                                                             login_md5 VARCHAR(200), \
-    #                                                             login_sha1 VARCHAR(200), \
-    #                                                             login_sha256 VARCHAR(200), \
-    #                                                             dob_date DATE, \
-    #                                                             dob_age DECIMAL(9,0), \
-    #                                                             registred_date DATE, \
-    #                                                             registred_age DECIMAL(9,0), \
-    #                                                             phone VARCHAR(200), \
-    #                                                             cell VARCHAR(200), \
-    #                                                             id_name VARCHAR(200), \
-    #                                                             id_value VARCHAR(200), \
-    #                                                             nat VARCHAR(20))'
-    #     return sql

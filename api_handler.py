@@ -58,8 +58,6 @@ class ApiHandler:
             self.logger.error('')
 
     def __api_request(self, param: str) -> requests.Response:
-        #request: str = f"{self.api_host}{self.api_method}?{param}&units=metric&appid={self.api_key}"
-        #request: str = f"https://randomuser.me/api/"
         request: str = f"{self.api_host}?{param}"
         self.logger.info(f'REQUEST STRING: {request}\n\n\n')
         return requests.get(request)
