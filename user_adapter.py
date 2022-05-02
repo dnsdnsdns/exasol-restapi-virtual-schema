@@ -99,9 +99,9 @@ class AdapterCallHandler:
                          "dataType": {"type": "DATE"}},
                         {"name": "DOB_AGE",
                          "dataType": {"type": "DECIMAL", "precision": 9, "scale": 0}},
-                        {"name": "REGISTRED_DATE",
+                        {"name": "REGISTERED_DATE",
                          "dataType": {"type": "DATE"}},
-                        {"name": "REGISTRED_AGE",
+                        {"name": "REGISTERED_AGE",
                          "dataType": {"type": "DECIMAL", "precision": 9, "scale": 0}},
                         {"name": "PHONE",
                           "dataType": {"type": "VARCHAR", "size": 200}},
@@ -233,8 +233,8 @@ class AdapterCallHandler:
                                                                 login_sha256 VARCHAR(200), \
                                                                 dob_date DATE, \
                                                                 dob_age DECIMAL(9,0), \
-                                                                registred_date DATE, \
-                                                                registred_age DECIMAL(9,0), \
+                                                                registered_date DATE, \
+                                                                registered_age DECIMAL(9,0), \
                                                                 phone VARCHAR(200), \
                                                                 cell VARCHAR(200), \
                                                                 id_name VARCHAR(200), \
