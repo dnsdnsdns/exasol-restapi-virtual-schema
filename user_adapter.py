@@ -30,7 +30,7 @@ class AdapterCallHandler:
         elif request_type == "getCapabilities":
             return json.dumps({"type": "getCapabilities",
                                "capabilities": ["FILTER_EXPRESSIONS", "LITERAL_STRING", "LITERAL_DOUBLE",
-                                                "LITERAL_EXACTNUMERIC", "FN_PRED_OR", "FN_PRED_AND",
+                                                "LITERAL_EXACTNUMERIC", "LITERAL_TIMESTAMP", "FN_PRED_OR", "FN_PRED_AND",
                                                 "FN_PRED_EQUAL", "FN_PRED_IN_CONSTLIST"]})
         elif request_type == "pushdown":
             return self.__handle_pushdown()
@@ -96,11 +96,11 @@ class AdapterCallHandler:
                         {"name": "LOGIN_SHA256",
                           "dataType": {"type": "VARCHAR", "size": 200}},                          
                         {"name": "DOB_DATE",
-                         "dataType": {"type": "VARCHAR", "size": 100}},
+                         "dataType": {"type": "TIMESTAMP"}},
                         {"name": "DOB_AGE",
                          "dataType": {"type": "DECIMAL", "precision": 9, "scale": 0}},
                         {"name": "REGISTERED_DATE",
-                         "dataType": {"type": "VARCHAR", "size": 100}},
+                         "dataType": {"type": "TIMESTAMP"}},
                         {"name": "REGISTERED_AGE",
                          "dataType": {"type": "DECIMAL", "precision": 9, "scale": 0}},
                         {"name": "PHONE",
@@ -227,9 +227,9 @@ class AdapterCallHandler:
                                                                 login_md5 VARCHAR(200), \
                                                                 login_sha1 VARCHAR(200), \
                                                                 login_sha256 VARCHAR(200), \
-                                                                dob_date VARCHAR(100), \
+                                                                dob_date TIMESTAMP, \
                                                                 dob_age DECIMAL(9,0), \
-                                                                registered_date VARCHAR(100), \
+                                                                registered_date TIMESTAMP, \
                                                                 registered_age DECIMAL(9,0), \
                                                                 phone VARCHAR(200), \
                                                                 cell VARCHAR(200), \
