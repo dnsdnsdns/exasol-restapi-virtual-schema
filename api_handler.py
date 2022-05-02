@@ -49,7 +49,7 @@ class ApiHandler:
             response: requests.Response = self.__api_request(param)
             json_response_object: dict = json.loads(response.text)
         except requests.Timeout as e:
-            e.message: str = f'E-VW-OWFS-8 API request with parameter <{param}> timed out.'
+            e.message = f'E-VW-OWFS-8 API request with parameter <{param}> timed out.'
 
         if response and response.status_code == 200:
             if self.api_method == 'user':
