@@ -64,21 +64,18 @@ class ApiHandler:
 
     def __emit_user(self, json_dict: dict) -> None:
         results_group = json_dict.get('results') if json_dict.get('results') else {}
+        results_converted = self.__cast_datatypes(results_group)
 
-        postcode = results_group[0].get('location').get('postcode')
-        if type(postcode) == int:
-            postcode = self.__cast_postcode(postcode)
-
-        self.ctx.emit(results_group[0].get('gender'),
-                    results_group[0].get('name').get('title'),
-                    results_group[0].get('name').get('first'),
-                    results_group[0].get('name').get('last'),
-                    results_group[0].get('location').get('street').get('number'),
-                    results_group[0].get('location').get('street').get('name'),
-                    results_group[0].get('location').get('city'),
-                    results_group[0].get('location').get('state'),
-                    results_group[0].get('location').get('country'),
-                    postcode,
+        self.ctx.emit(results_converted[0].get('gender'),
+                    results_converted[0].get('name').get('title'),
+                    results_converted[0].get('name').get('first'),
+                    results_converted[0].get('name').get('last'),
+                    results_converted[0].get('location').get('street').get('number'),
+                    results_converted[0].get('location').get('street').get('name'),
+                    results_converted[0].get('location').get('city'),
+                    results_converted[0].get('location').get('state'),
+                    results_converted[0].get('location').get('country'),
+                    results_converted[0].get('location').get('postcode'),
                     results_group[0].get('location').get('coordinates').get('latitude'),
                     results_group[0].get('location').get('coordinates').get('longitude'),
                     results_group[0].get('location').get('timezone').get('offset'),
@@ -101,7 +98,20 @@ class ApiHandler:
                     results_group[0].get('id').get('value'),
                     results_group[0].get('nat'))
 
+    def __cast_datatypes(self, results_json: dict) -> dict:
+        # postcode in api response can be int or string, if int cast to string
+        if type(results_json[0].get('location').get('postcode')) == int:
+            results_json[0]['location']['postcode'] = self.__cast_postcode(results_json[0].get('location').get('postcode'))
+        # dob_date and registred_date in api response are of type string, cast to timestamp/datetime
+        results_json[0]['dob']['date'] = self.__cast_to_timestamp(results_json[0].get('dob').get('date'))
+        results_json[0]['registered']['date'] = self.__cast_to_timestamp(results_json[0].get('registered').get('date'))
+        return results_json
+
     def __cast_postcode(self, postcode: int) -> str:
         return str(postcode)
+
+    def __cast_to_timestamp(self, timestamp_str: str) -> datetime.datetime:
+        return datetime.datetime.strptime(timestamp_str, '%Y-%m-%dT%H:%M:%S.%fZ')
+
 
 
