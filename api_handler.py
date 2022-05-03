@@ -63,6 +63,7 @@ class ApiHandler:
     def __api_request(self, param: str) -> requests.Response:
         request: str = f"{self.api_host}?{param}"
         self.logger.info(f'REQUEST STRING: {request}\n\n\n')
+        print(request)
         return requests.get(request)
 
     def __emit_user(self, json_dict: dict) -> None:
