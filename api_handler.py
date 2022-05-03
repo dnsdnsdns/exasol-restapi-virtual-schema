@@ -29,20 +29,20 @@ class ApiHandler:
             self.__request_api_and_emit(self.parameter_expressions)
 
     def __unpack_parameter_expression_list(self) -> None:
+        param_str = ''
         for expression in self.parameter_expressions:
             # -- Handle Null values sent from the adapter
             if (type(expression) == list and any(not element for element in expression)) or not expression:
                 continue
             elif type(expression) == list and (all(element.startswith('nat') for element in expression)):
-                self.__unpack_const_list_expression(expression)
+                param_str += self.__unpack_const_list_expression(expression)
             elif type(expression) == list and (all(element.startswith('gender') for element in expression)):
-                self.__unpack_const_list_expression(expression)
-            else:
-                self.__request_api_and_emit(expression)
+                param_str += self.__unpack_const_list_expression(expression)
+        self.__request_api_and_emit(param_str)
 
-    def __unpack_const_list_expression(self, expression: list) -> None:
-        for literal in expression:
-            self.__request_api_and_emit(literal)
+    # def __unpack_const_list_expression(self, expression: list) -> None:
+    #     for literal in expression:
+    #         self.__request_api_and_emit(literal)
 
     def __request_api_and_emit(self, param: str) -> None:
         self.logger.info(f'REQUESTNG API WITH: {param}')
