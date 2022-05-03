@@ -182,9 +182,9 @@ class AdapterCallHandler:
 
         self.logger.info(f'Filter name: {filter_name} || Filter value: {filter_value}')
 
-        api_parameter_key_mapping: dict = {'GENDER': 'gender='}
+        api_parameter_key_mapping: dict = {'GENDER': 'gender=', 'NAT':'nat'}
 
-        if filter_name in ('GENDER'):
+        if filter_name in ('GENDER', 'NAT'):
             try:
                 float(filter_value)
                 raise TypeError()
