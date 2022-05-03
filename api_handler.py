@@ -33,9 +33,9 @@ class ApiHandler:
             # -- Handle Null values sent from the adapter
             if (type(expression) == list and any(not element for element in expression)) or not expression:
                 continue
-            elif type(expression) == list and (all(element.startswith('gender') for element in expression)):
-                self.__unpack_const_list_expression(expression)
             elif type(expression) == list and (all(element.startswith('nat') for element in expression)):
+                self.__unpack_const_list_expression(expression)
+            elif type(expression) == list and (all(element.startswith('gender') for element in expression)):
                 self.__unpack_const_list_expression(expression)
             else:
                 self.__request_api_and_emit(expression)
