@@ -39,7 +39,7 @@ class ApiHandler:
                 param_str += expression + '&'
             elif type(expression) == list and (all(element.startswith('gender') for element in expression)):
                 param_str += expression + '&'
-        self.logger.info(param_str)
+        self.logger.info(f'*****************PARAMETER-STRING**********: {param_str}')
         self.__request_api_and_emit(param_str)
 
     # def __unpack_const_list_expression(self, expression: list) -> None:
