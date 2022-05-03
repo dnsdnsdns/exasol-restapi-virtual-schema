@@ -25,8 +25,10 @@ class ApiHandler:
         results."""
         if type(self.parameter_expressions) == list:
             self.__unpack_parameter_expression_list()
+            self.logger.info('if-zweig von api_calls()')
         else:
             self.__request_api_and_emit(self.parameter_expressions)
+            self.logger.info('else-zweig von api_calls()')
 
     def __unpack_parameter_expression_list(self) -> None:
         param_str = ''
