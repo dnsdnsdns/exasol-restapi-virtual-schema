@@ -34,16 +34,14 @@ class ApiHandler:
         param_str = ''
         for expression in self.parameter_expressions:
             # -- Handle Null values sent from the adapter
-            if (type(expression) == list and any(not element for element in expression)) or not expression:
-                continue
-            elif type(expression) == list and (all(element.startswith('nat') for element in expression)):
-                #param_str += self.__unpack_const_list_expression(expression)
-                param_str += expression + '&'
-                self.logger.info(expression)
-            elif type(expression) == list and (all(element.startswith('gender') for element in expression)):
-                param_str += expression + '&'
-                self.logger.info(expression)
-        self.logger.info(f'*****************PARAMETER-STRING**********: {param_str}')
+            # if (type(expression) == list and any(not element for element in expression)) or not expression:
+            #     continue
+            # elif type(expression) == list and (all(element.startswith('nat') for element in expression)):
+            #     param_str += self.__unpack_const_list_expression(expression)
+            # elif type(expression) == list and (all(element.startswith('gender') for element in expression)):
+            #     param_str += self.__unpack_const_list_expression(expression)
+            
+            param_str += expression + '&'
         self.__request_api_and_emit(param_str)
 
     # def __unpack_const_list_expression(self, expression: list) -> None:
