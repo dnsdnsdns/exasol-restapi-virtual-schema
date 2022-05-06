@@ -132,6 +132,7 @@ class AdapterCallHandler:
     def __build_sql(self):
         api_method: str = self.__parse_api_method_from_name(self.request_json_object['pushdownRequest']['from']['name'])
         filters = self.parse_filters(self.request_json_object['pushdownRequest']['filter'])
+        limit = self.__parse_limit(self.request_json_object['pushdownRequest']['limit']['numElements'])
 
         log_ip: str = self.logger.handlers[0].host
         log_port: int = self.logger.handlers[0].port
@@ -139,11 +140,17 @@ class AdapterCallHandler:
 
         self.logger.info(f'\n\n\nAPI FILTERS {filters}')
         if api_method == 'user_table':
-            return self.__generate_user_sql(api_method, json.dumps(filters), log_ip, log_port, log_level)
+            return self.__generate_user_sql(api_method, json.dumps(filters), limit, log_ip, log_port, log_level)
 
     def __parse_api_method_from_name(self, name) -> str:
         if name == 'USER_TABLE':
             return 'user_table'
+
+    def __parse_limit(limit):
+        if type(limit) == int:
+            return f'results={limit}'
+        else:
+            return 'results=1'
 
     def parse_filters(self, filters):
         buffer = []
@@ -197,10 +204,11 @@ class AdapterCallHandler:
             raise KeyError(
                 f'E-VS-OWFS-1 Filtering not supported on column {filter_name} in PREDICATE_EQUAL expression.')
 
-    def __generate_user_sql(self, api_method, filters, log_ip, log_port, log_level) -> str:
+    def __generate_user_sql(self, api_method, filters, limit, log_ip, log_port, log_level) -> str:
         sql: str = f'SELECT restapi_vs_scripts.api_handler(\'{self.API_URL}\', \
                                                         \'{api_method}\', \
                                                         \'{filters}\', \
+                                                        \'{limit}\', \
                                                         \'{self.api_key}\', \
                                                         \'{log_ip}\', \
                                                         \'{log_port}\', \

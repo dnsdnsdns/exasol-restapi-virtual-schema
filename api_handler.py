@@ -11,6 +11,7 @@ class ApiHandler:
         self.api_host: str = ctx.api_host
         self.api_method: str = ctx.api_method
         self.api_key: str = ctx.api_key
+        self.api_limit: str = ctx.limit
 
         try:
             self.parameter_expressions = json.loads(ctx.api_parameters)
@@ -23,7 +24,6 @@ class ApiHandler:
         """Takes the API parameter expression(s) the UDF was called with and unpacks them if they are a list. After
         unpacking the values the class proceeds with calling the API with the respective parameters and emitting the
         results."""
-        self.logger.info('\n', self.parameter_expressions, '\n')
         if type(self.parameter_expressions) == list:
             self.__unpack_parameter_expression_list()
         else:
@@ -63,7 +63,7 @@ class ApiHandler:
             self.logger.error('')
 
     def __api_request(self, param: str) -> requests.Response:
-        request: str = f"{self.api_host}?{param}"
+        request: str = f"{self.api_host}?{param}?{self.api_limit}"
         self.logger.info(f'REQUEST STRING: {request}\n\n\n')
         return requests.get(request)
 
