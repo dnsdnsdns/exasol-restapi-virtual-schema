@@ -23,12 +23,11 @@ class ApiHandler:
         """Takes the API parameter expression(s) the UDF was called with and unpacks them if they are a list. After
         unpacking the values the class proceeds with calling the API with the respective parameters and emitting the
         results."""
+        self.logger.info('\n', self.parameter_expressions, '\n')
         if type(self.parameter_expressions) == list:
             self.__unpack_parameter_expression_list()
-            self.logger.info('if-zweig von api_calls()')
         else:
             self.__request_api_and_emit(self.parameter_expressions)
-            self.logger.info('else-zweig von api_calls()')
 
     def __unpack_parameter_expression_list(self) -> None:
         param_str = ''
