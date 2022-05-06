@@ -146,7 +146,7 @@ class AdapterCallHandler:
         if name == 'USER_TABLE':
             return 'user_table'
 
-    def __parse_limit(self, limit):
+    def __parse_limit(self, limit) -> str:
         if type(limit) == int:
             return f'results={limit}'
         else:

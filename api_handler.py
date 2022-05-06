@@ -11,7 +11,7 @@ class ApiHandler:
         self.api_host: str = ctx.api_host
         self.api_method: str = ctx.api_method
         self.api_key: str = ctx.api_key
-        self.api_limit: str = ctx.limit
+        self.api_limit: str = ctx.api_limit
 
         try:
             self.parameter_expressions = json.loads(ctx.api_parameters)
