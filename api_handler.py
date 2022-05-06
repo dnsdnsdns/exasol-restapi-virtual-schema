@@ -63,12 +63,17 @@ class ApiHandler:
             self.logger.error('')
 
     def __api_request(self, param: str) -> requests.Response:
-        request: str = f"{self.api_host}?{param}?{self.api_limit}"
+        request: str = f"{self.api_host}?{param}&{self.api_limit}"
         self.logger.info(f'REQUEST STRING: {request}\n\n\n')
         return requests.get(request)
 
     def __emit_user(self, json_dict: dict) -> None:
         results_group = json_dict.get('results') if json_dict.get('results') else {}
+
+        # for result_number, user_json in enumerate(results_group):
+        #     results_converted = self.__cast_datatypes(user_json)
+        #     self.ctx.emit(results_converted)
+
         results_converted = self.__cast_datatypes(results_group)
 
         self.ctx.emit(results_converted[0].get('gender'),
