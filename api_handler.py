@@ -70,51 +70,47 @@ class ApiHandler:
     def __emit_user(self, json_dict: dict) -> None:
         results_group = json_dict.get('results') if json_dict.get('results') else {}
 
-        # for result_number, user_json in enumerate(results_group):
-        #     results_converted = self.__cast_datatypes(user_json)
-        #     self.ctx.emit(results_converted)
-
-        results_converted = self.__cast_datatypes(results_group)
-
-        self.ctx.emit(results_converted[0].get('gender'),
-                    results_converted[0].get('name').get('title'),
-                    results_converted[0].get('name').get('first'),
-                    results_converted[0].get('name').get('last'),
-                    results_converted[0].get('location').get('street').get('number'),
-                    results_converted[0].get('location').get('street').get('name'),
-                    results_converted[0].get('location').get('city'),
-                    results_converted[0].get('location').get('state'),
-                    results_converted[0].get('location').get('country'),
-                    results_converted[0].get('location').get('postcode'),
-                    results_group[0].get('location').get('coordinates').get('latitude'),
-                    results_group[0].get('location').get('coordinates').get('longitude'),
-                    results_group[0].get('location').get('timezone').get('offset'),
-                    results_group[0].get('location').get('timezone').get('description'),
-                    results_group[0].get('email'),
-                    results_group[0].get('login').get('uuid'),
-                    results_group[0].get('login').get('username'),
-                    results_group[0].get('login').get('password'),
-                    results_group[0].get('login').get('salt'),
-                    results_group[0].get('login').get('md5'),
-                    results_group[0].get('login').get('sha1'),
-                    results_group[0].get('login').get('sha256'),
-                    results_group[0].get('dob').get('date'),
-                    results_group[0].get('dob').get('age'),
-                    results_group[0].get('registered').get('date'),
-                    results_group[0].get('registered').get('age'),
-                    results_group[0].get('phone'),
-                    results_group[0].get('cell'),
-                    results_group[0].get('id').get('name'),
-                    results_group[0].get('id').get('value'),
-                    results_group[0].get('nat'))
+        for user_json in results_group:
+            results_converted = self.__cast_datatypes(user_json)
+            self.ctx.emit(results_converted.get('gender'),
+                    results_converted.get('name').get('title'),
+                    results_converted.get('name').get('first'),
+                    results_converted.get('name').get('last'),
+                    results_converted.get('location').get('street').get('number'),
+                    results_converted.get('location').get('street').get('name'),
+                    results_converted.get('location').get('city'),
+                    results_converted.get('location').get('state'),
+                    results_converted.get('location').get('country'),
+                    results_converted.get('location').get('postcode'),
+                    results_converted.get('location').get('coordinates').get('longitude'),
+                    results_converted.get('location').get('coordinates').get('latitude'),
+                    results_converted.get('location').get('timezone').get('offset'),
+                    results_converted.get('location').get('timezone').get('description'),
+                    results_converted.get('email'),
+                    results_converted.get('login').get('uuid'),
+                    results_converted.get('login').get('username'),
+                    results_converted.get('login').get('password'),
+                    results_converted.get('login').get('salt'),
+                    results_converted.get('login').get('md5'),
+                    results_converted.get('login').get('sha1'),
+                    results_converted.get('login').get('sha256'),
+                    results_converted.get('dob').get('date'),
+                    results_converted.get('dob').get('age'),
+                    results_converted.get('registered').get('date'),
+                    results_converted.get('registered').get('age'),
+                    results_converted.get('phone'),
+                    results_converted.get('cell'),
+                    results_converted.get('id').get('name'),
+                    results_converted.get('id').get('value'),
+                    results_converted.get('nat'))
 
     def __cast_datatypes(self, results_json: dict) -> dict:
         # postcode in api response can be int or string, if int cast to string
-        if type(results_json[0].get('location').get('postcode')) == int:
-            results_json[0]['location']['postcode'] = self.__cast_postcode(results_json[0].get('location').get('postcode'))
+        if type(results_json.get('location').get('postcode')) == int:
+            results_json['location']['postcode'] = self.__cast_postcode(results_json.get('location').get('postcode'))
         # dob_date and registred_date in api response are of type string, cast to timestamp/datetime
-        results_json[0]['dob']['date'] = self.__cast_to_timestamp(results_json[0].get('dob').get('date'))
-        results_json[0]['registered']['date'] = self.__cast_to_timestamp(results_json[0].get('registered').get('date'))
+        results_json['dob']['date'] = self.__cast_to_timestamp(results_json.get('dob').get('date'))
+        results_json['registered']['date'] = self.__cast_to_timestamp(results_json.get('registered').get('date'))
         return results_json
 
     def __cast_postcode(self, postcode: int) -> str:
